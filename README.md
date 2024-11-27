@@ -1,7 +1,7 @@
 # WebSerial Dart package
 
 
-A Dart package for the [Web Serial API]https://wicg.github.io/serial/), built on top of the web package. This package exists only because the web package only supports Web APIs that are standardised by the [W3C](https://www.w3.org/) or are on the W3C Standards Track, which for now the Web Serial API is not.
+A Dart package for the [Web Serial API](https://wicg.github.io/serial/), built on top of the web package. This package exists only because the web package only supports Web APIs that are standardised by the [W3C](https://www.w3.org/) or are on the W3C Standards Track, which for now the Web Serial API is not.
 
 
 ## Using the package
