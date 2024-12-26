@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:webserial/webserial.dart';
 import 'dart:js_interop';
@@ -12,7 +14,12 @@ class MainApp extends StatelessWidget {
   void chooseSerialDevice() async {
     late final JSSerialPort? port;
     try {
-      port = await requestWebSerialPort();
+      // Create filter options for specific vendor ID
+      final filters = [
+        JSFilterObject(usbVendorId: 0xcafe, usbProductId: 0x4009)
+      ];
+
+      port = await requestWebSerialPort(filters.toJS);
       print("got serial port: $port");
     } catch (e) {
       print(e);
@@ -40,6 +47,14 @@ class MainApp extends StatelessWidget {
     }
     // Listen to data coming from the serial device.
     final reader = port?.readable?.getReader() as ReadableStreamDefaultReader;
+
+    // example of sending data to serial immediately after opening
+    final request = Uint8List.fromList([0x02]);
+    final JSUint8Array jsReq = request.toJS;
+    final writer = port?.writable?.getWriter();
+    writer?.write(jsReq);
+    // Allow the serial port to be closed later.
+    writer?.releaseLock();
 
     while (true) {
       final result = await reader.read().toDart;

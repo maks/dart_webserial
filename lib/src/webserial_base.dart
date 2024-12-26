@@ -3,21 +3,39 @@ import 'package:web/web.dart' as web;
 export 'package:web/web.dart'
     show ReadableStreamDefaultReader, WritableStreamDefaultWriter, EventHandler;
 
-Future<JSSerialPort?> requestWebSerialPort() async =>
-    await web.window.navigator.serial.requestPort().toDart;
+Future<JSSerialPort?> requestWebSerialPort(
+    JSArray<JSFilterObject>? filters) async {
+  filters ??= JSArray<JSFilterObject>();
+  return await web.window.navigator.serial
+      .requestPort(JSSerialPortRequestOptions(filters: filters))
+      .toDart;
+}
 
 extension on web.Navigator {
   external JSSerial get serial;
 }
 
 extension type JSSerial._(JSObject _) implements web.EventTarget, JSObject {
-  external JSPromise<JSSerialPort?> requestPort();
+  external JSPromise<JSSerialPort?> requestPort(
+      JSSerialPortRequestOptions? options);
   external web.EventHandler? onconnect;
   external web.EventHandler? ondisconnect;
   external JSPromise<JSArray<JSSerialPort?>> getPorts();
 }
 
-extension type JSSerialPortRequestOptions._(JSObject _) implements JSObject {}
+extension type JSSerialPortRequestOptions._(JSObject _) implements JSObject {
+  external JSSerialPortRequestOptions({
+    required JSArray<JSFilterObject> filters,
+  });
+  external JSArray<JSFilterObject> get filters;
+}
+
+extension type JSFilterObject._(JSObject _) implements JSObject {
+  external JSFilterObject(
+      {required int usbVendorId, required int usbProductId});
+  external int get usbVendorId;
+  external int get usbProductId;
+}
 
 extension type JSSerialOptions._(JSObject _) implements JSObject {
   external JSSerialOptions({

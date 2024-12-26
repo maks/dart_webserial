@@ -1,6 +1,6 @@
 name: webserial
 description: WebSerial support for Dart built on the web package.
-version: 1.0.0
+version: 1.1.0
 repository: https://github.com/maks/dart_webserial
 
 environment:
